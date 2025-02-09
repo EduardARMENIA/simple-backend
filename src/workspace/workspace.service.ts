@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { Workspace } from '../models/workspace.schema';
-import { CreateWorkspaceDto } from './create.workspace.dto';
+import { CreateWorkspaceDto } from '../dto/create.workspace.dto';
 import { User } from '../models/user.schema';
 @Injectable()
 export class WorkspaceService {
@@ -33,15 +33,6 @@ export class WorkspaceService {
     return await newWorkspace.save();
   }
 
-  async updateWorkspace(workspaceId: string, updateStudentDto: CreateWorkspaceDto): Promise<any> {
-    const existingWorkspace = await  this.workspaceModel
-      .findByIdAndUpdate(workspaceId, updateStudentDto, { new: true });
-
-    if (!existingWorkspace) {
-      throw new NotFoundException(`Workspace #${workspaceId} not found`);
-    }
-    return existingWorkspace;
-  }
 
   async getAllWorkspaces(): Promise<any[]> {
     const workspaceData = await this.workspaceModel.find();
@@ -52,13 +43,13 @@ export class WorkspaceService {
     return workspaceData;
   }
 
-  async getSWorkspace(workspaceId: string): Promise<any> {
+  async getSWorkspaceByUserId(userId: string): Promise<any> {
     const existingWorkspace = await this.workspaceModel
-      .findById(workspaceId)
+      .find({userId})
       .exec();
 
     if (!existingWorkspace) {
-      throw new NotFoundException(`Workspace #${workspaceId} not found`);
+      throw new NotFoundException(`Workspace #${userId} not found`);
     }
     return existingWorkspace;
   }

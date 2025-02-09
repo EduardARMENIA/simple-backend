@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Query, HttpException } from '@nestjs/common';
-import { CreateWorkspaceDto } from './create.workspace.dto';
+import { CreateWorkspaceDto } from '../dto/create.workspace.dto';
 import { WorkspaceService } from './workspace.service';
 
 @Controller('workspace')
@@ -29,10 +29,10 @@ export class WorkspaceController {
   @Post()
   async createWorkspace(@Res() response, @Body() createWorkspaceDto: CreateWorkspaceDto) {
     try {
-      const newStudent = await this.workspaceService.createWorkspace(createWorkspaceDto);
+      const newWorkspace = await this.workspaceService.createWorkspace(createWorkspaceDto);
       return response.status(HttpStatus.CREATED).json({
         message: 'Workspace has been created successfully',
-        newStudent,
+        newWorkspace,
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -46,20 +46,20 @@ export class WorkspaceController {
   @Get()
   async getWorkspaces(@Res() response) {
     try {
-      const studentData = await this.workspaceService.getAllWorkspaces();
+      const workspacesData = await this.workspaceService.getAllWorkspaces();
       return response.status(HttpStatus.OK).json({
-        message: 'All workspaces data found successfully',studentData,});
+        message: 'All workspaces data found successfully',workspacesData});
     } catch (err) {
       return response.status(err.status).json(err.response);
     }
   }
   @Get('/:id')
-  async getWorkspace(@Res() response, @Param('id') workspaceId: string) {
+  async getWorkspaceByUserId(@Res() response, @Param('id') userId: string) {
     try {
-      const existingStudent = await
-        this.workspaceService.getSWorkspace(workspaceId);
+      const workspacesData = await this.workspaceService.getSWorkspaceByUserId(userId);
+
       return response.status(HttpStatus.OK).json({
-        message: 'Workspace found successfully',existingStudent,});
+        message: 'Workspace found successfully',workspacesData,});
     } catch (err) {
       return response.status(err.status).json(err.response);
     }

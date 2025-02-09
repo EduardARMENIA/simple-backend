@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards, Headers, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
-import { RegisterDTO } from 'src/user/register.dto';
+import { RegisterDTO } from 'src/dto/register.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
-import { LoginDTO } from './login.dto';
+import { LoginDTO } from '../dto/login.dto';
 import { verify } from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
