@@ -48,11 +48,11 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email }).populate('workspaces').exec();
+
     if (!user) {
       throw new HttpException('user doesnt exists', HttpStatus.BAD_REQUEST);
     }
-
     return user
   }
 

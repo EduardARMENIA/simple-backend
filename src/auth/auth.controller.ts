@@ -60,11 +60,13 @@ export class AuthController {
       const check = verify(token, process.env.SECRET_KEY as string);
       // @ts-ignore
       let user  = await this.userService.findByEmail(check.email)
-      const { _id, email } = user
+
+      const { _id, email, workspaces } = user
 
       return {
         id: _id,
-        email: email
+        email: email,
+        workspaces: workspaces,
       }
     } catch (error) {
       throw new UnauthorizedException('Invalid token');
