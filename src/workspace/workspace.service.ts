@@ -33,7 +33,6 @@ export class WorkspaceService {
     return await newWorkspace.save();
   }
 
-
   async getAllWorkspaces(): Promise<any[]> {
     const workspaceData = await this.workspaceModel.find();
 

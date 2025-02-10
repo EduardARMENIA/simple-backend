@@ -49,6 +49,7 @@ export class AuthController {
     return { user, token};
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Get('profile')
   async profile(@Headers('Authorization') auth?: string) {
     if (!auth || !auth.startsWith('Bearer ')) {

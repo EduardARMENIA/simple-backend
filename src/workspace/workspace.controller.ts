@@ -1,11 +1,26 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Query, HttpException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Res,
+  Query,
+  HttpException,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateWorkspaceDto } from '../dto/create.workspace.dto';
 import { WorkspaceService } from './workspace.service';
+import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 
 @Controller('workspace')
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) { }
 
+  @UseGuards(AuthGuard("jwt"))
   @Get('check-slug')
   async checkSlugAvailability(@Query('slug') slug: string) {
     let counter = 1;
@@ -25,7 +40,7 @@ export class WorkspaceController {
     return { isSlugAvailable: false,  availableSlugs: availableSlugs};
   }
 
-
+  @UseGuards(AuthGuard("jwt"))
   @Post()
   async createWorkspace(@Res() response, @Body() createWorkspaceDto: CreateWorkspaceDto) {
     try {
@@ -43,6 +58,7 @@ export class WorkspaceController {
     }
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Get()
   async getWorkspaces(@Res() response) {
     try {
@@ -53,6 +69,7 @@ export class WorkspaceController {
       return response.status(err.status).json(err.response);
     }
   }
+  @UseGuards(AuthGuard("jwt"))
   @Get('/:id')
   async getWorkspaceByUserId(@Res() response, @Param('id') userId: string) {
     try {
@@ -64,14 +81,17 @@ export class WorkspaceController {
       return response.status(err.status).json(err.response);
     }
   }
+
+  @UseGuards(AuthGuard("jwt"))
   @Delete('/:id')
-  async deleteWorkspace(@Res() response, @Param('id') studentId: string)
+  async deleteWorkspace(@Res() response, @Param('id') workspaceId: string)
   {
     try {
-      const deletedStudent = await this.workspaceService.deleteWorkspace(studentId);
+      const deletedWorkspace = await this.workspaceService.deleteWorkspace(workspaceId);
       return response.status(HttpStatus.OK).json({
         message: 'Workspace deleted successfully',
-        deletedStudent,});
+        deletedWorkspace,
+      });
     }catch (err) {
       return response.status(err.status).json(err.response);
     }
